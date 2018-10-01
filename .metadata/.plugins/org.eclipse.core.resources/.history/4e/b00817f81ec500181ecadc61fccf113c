@@ -47,7 +47,6 @@ public class CidadeService {
 		Cidade cidadeSalva = cidadeRepository.findOne(cd_Cidade);
 		String apiKey;
 		String filtroCidade;
-		int count;
 		List<Clima> forecastClima = new ArrayList<>();
 		
 		apiKey = "eb8b1a9405e659b2ffc78f0a520b1a46";
@@ -61,9 +60,8 @@ public class CidadeService {
 		filtroCidade = cidadeSalva.getNm_Cidade() + ", " + cidadeSalva.getSg_Pais().toUpperCase();
 		
 		DailyWeatherForecast forecast = owm.dailyWeatherForecastByCityName(filtroCidade);
-		count = forecast.getCityData().getId();
 		
-		if (count > 0) {
+		if (forecast.getDataCount() > 0) {
 			LocalDate data;
 			ZoneId defaultZoneId = ZoneId.systemDefault();
 			

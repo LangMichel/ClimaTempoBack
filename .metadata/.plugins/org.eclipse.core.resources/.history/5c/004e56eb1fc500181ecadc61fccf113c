@@ -61,7 +61,9 @@ public class CidadeService {
 		filtroCidade = cidadeSalva.getNm_Cidade() + ", " + cidadeSalva.getSg_Pais().toUpperCase();
 		
 		DailyWeatherForecast forecast = owm.dailyWeatherForecastByCityName(filtroCidade);
+		System.out.println("antes count");
 		count = forecast.getCityData().getId();
+		System.out.println(count);
 		
 		if (count > 0) {
 			LocalDate data;

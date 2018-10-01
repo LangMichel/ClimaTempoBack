@@ -10185,3 +10185,75 @@ java.lang.IllegalStateException: startLine (4) does not match endLine (3)
 
 !ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 20:19:40.414
 !MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 21:14:58.653
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 21:14:58.688
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 21:15:29.524
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 21:15:29.528
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 22:48:29.124
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 22:48:29.168
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 22:50:31.657
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 22:50:31.660
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 22:52:26.511
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 22:52:26.515
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 22:59:38.045
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 22:59:38.048
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:05:20.710
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:05:20.714
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:09:04.152
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:09:04.162
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:11:00.517
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:11:00.521
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:14:09.180
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:14:09.184
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:15:52.173
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:15:52.176
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:16:58.637
+!MESSAGE Field value processing of @ConfigurationProperty meta-data is not supported
+
+!ENTRY org.eclipse.jdt.apt.pluggable.core 1 1 2018-09-30 23:16:58.640
+!MESSAGE Hibernate JPA 2 Static-Metamodel Generator 5.0.12.Final

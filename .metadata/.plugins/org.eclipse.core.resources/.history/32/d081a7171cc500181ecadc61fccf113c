@@ -63,13 +63,16 @@ public class CidadeResource {
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CIDADE') and #oauth2.hasScope('write')")
 	public ResponseEntity<Cidade> criar(@Valid @RequestBody Cidade cidade, HttpServletResponse response) throws APIException, ParseException {
+		System.out.println(cidade.getNm_Cidade());
+		System.out.println(cidade.getSg_Pais());
 		
 		String nomeCidade = cidadeService.verificarDadosClima(cidade.getNm_Cidade(), cidade.getSg_Pais());
 		Cidade cidadeSalva = cidadeRepository.save(cidade);
+		System.out.println(nomeCidade);
 				
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, cidadeSalva.getCd_Cidade()));
 		
-		return !StringUtils.isEmpty(nomeCidade) ? ResponseEntity.status(HttpStatus.CREATED).body(cidadeSalva) : ResponseEntity.notFound().build();
+		return !StringUtils.isEmpty(nomeCidade) ? ResponseEntity.status(HttpStatus.CREATED).body(cidadeSalva):ResponseEntity.notFound().build();
 		
 	}
 	
@@ -91,18 +94,16 @@ public class CidadeResource {
 	
 	@PutMapping("/{cd_Cidade}")
 	@PreAuthorize("hasAuthority('ROLE_EDITAR_CIDADE') and #oauth2.hasScope('write')")
-	public ResponseEntity<Cidade> atualizar(@PathVariable Long cd_Cidade, @Valid @RequestBody Cidade cidade) throws APIException, ParseException {
-		System.out.println(cidade.getSg_Pais());
-		String nomeCidade = cidadeService.verificarDadosClima(cidade.getNm_Cidade(), cidade.getSg_Pais());
-		
+	public ResponseEntity<Cidade> atualizar(@PathVariable Long cd_Cidade, @Valid @RequestBody Cidade cidade) {
 		Cidade cidadeSalva = cidadeService.atualizar(cd_Cidade, cidade);
-		return !StringUtils.isEmpty(nomeCidade) ? ResponseEntity.ok(cidadeSalva) : ResponseEntity.notFound().build();
+		return ResponseEntity.ok(cidadeSalva);
 		
 	}
 	
 	@GetMapping("/clima/{cd_Cidade}")
 	@PreAuthorize("hasAuthority('ROLE_CONSULTAR_CIDADE') and #oauth2.hasScope('read')")
 	public ResponseEntity<List<Clima>> consultarClima(@PathVariable Long cd_Cidade) throws APIException, ParseException {
+		System.out.println("Entrou no consultar");
 		List<Clima> climaCidade = cidadeService.consultarClima(cd_Cidade);
 		return climaCidade != null ? ResponseEntity.ok(climaCidade) : ResponseEntity.notFound().build(); 
 		

@@ -63,6 +63,7 @@ public class CidadeService {
 		DailyWeatherForecast forecast = owm.dailyWeatherForecastByCityName(filtroCidade);
 		count = forecast.getCityData().getId();
 		
+		System.out.println(count);
 		if (count > 0) {
 			LocalDate data;
 			ZoneId defaultZoneId = ZoneId.systemDefault();

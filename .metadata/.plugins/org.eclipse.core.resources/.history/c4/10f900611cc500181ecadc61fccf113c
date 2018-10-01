@@ -92,7 +92,7 @@ public class CidadeResource {
 	@PutMapping("/{cd_Cidade}")
 	@PreAuthorize("hasAuthority('ROLE_EDITAR_CIDADE') and #oauth2.hasScope('write')")
 	public ResponseEntity<Cidade> atualizar(@PathVariable Long cd_Cidade, @Valid @RequestBody Cidade cidade) throws APIException, ParseException {
-		System.out.println(cidade.getSg_Pais());
+		
 		String nomeCidade = cidadeService.verificarDadosClima(cidade.getNm_Cidade(), cidade.getSg_Pais());
 		
 		Cidade cidadeSalva = cidadeService.atualizar(cd_Cidade, cidade);
