@@ -1,0 +1,14 @@
+climatempo.seguranca.enable-https=true
+
+!o nome do arquivo application-prod.properties
+!o prod é o profile do spring que conseguimos passar quando subir a aplicação.
+
+!Para utilizar o Heroku
+spring.datasource.url={JDBC_DATABASE_URL}
+spring.datasource.username={JDBC_DATABASE_USERNAME}
+spring.datasource.password={JDBC_DATABASE_PASSWORD}
+
+!ainda não possui para fazer o cors, primeiro precisa desenvolver o front-end, angular
+salonmanager.origin-permitida=https://salonmanager-web.herokuapp.com
+!será nome definido para desenvolvimento
+

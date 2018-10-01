@@ -1,0 +1,39 @@
+package com.ddm.climatempo.api.service;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import com.ddm.climatempo.api.model.Cidade;
+import com.ddm.climatempo.api.repository.CidadeRepository;
+
+
+@Service
+public class CidadeService {
+	
+	@Autowired
+	private CidadeRepository cidadeRepository;
+	
+	public Cidade salvar(Cidade cidade) {
+		return cidadeRepository.save(cidade);
+	}
+	
+	public Cidade atualizar (long cd_Cidade, Cidade cidade) {
+		Cidade cidadeSalva = encontrarMarcaPorCodigo(cd_Cidade); 
+		
+		BeanUtils.copyProperties(cidade, cidadeSalva, "cd_Cidade");
+		
+		return cidadeRepository.save(cidadeSalva);
+	}
+	
+	public Cidade encontrarMarcaPorCodigo(long cd_Cidade) {
+		Cidade cidadeSalva = cidadeRepository.findOne(cd_Cidade);
+		
+		if (cidadeSalva == null){
+			throw new EmptyResultDataAccessException(1);
+		}
+		return cidadeSalva;
+	}
+
+}

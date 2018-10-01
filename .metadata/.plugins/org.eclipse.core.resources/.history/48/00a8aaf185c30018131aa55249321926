@@ -1,0 +1,286 @@
+package com.ddm.climatempo.api.model;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
+@Table(name="funcionario")
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Funcionario{
+	
+	@Id
+	@Column(name="cd_Funcionario")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long cd_Funcionario;
+	
+	@NotNull
+	@Size (min = 3, max = 100)
+	private String nm_Funcionario;
+	
+	@NotNull
+	private String email;
+	
+	//@NotNull
+	private String ds_Senha;
+	
+	protected double vl_Salario;
+	
+	protected double vl_Porcentagem;
+	
+	protected double jornada;
+	
+	@NotNull
+	private boolean ativo;
+	
+	@NotNull
+	private boolean opt_Salario;
+	
+	@NotNull
+	private boolean opt_Porcentagem;
+	
+	private LocalDate dt_Nascimento;
+	
+	private String nr_Nis;
+	
+	private String nr_Cpf;
+	
+	private String pispaseb;
+	
+	private Integer nr_Serie;
+	
+	private Integer nr_Carteira;
+		
+	private String uf;
+	
+	private String nr_Telefone;
+	
+	private String nr_Celular;
+	
+	//ao buscar funcionario, buscará também as suas permissões
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "funcionario_permissao", joinColumns = @JoinColumn(name = "codigo_funcionario")
+		,inverseJoinColumns = @JoinColumn(name = "codigo_permissao"))
+	private List<Permissao> permissoes;
+	
+	@Embedded
+	protected Endereco endereco;
+
+	public LocalDate getDt_Nascimento() {
+		return dt_Nascimento;
+	}
+	
+	public void setDt_Nascimento(LocalDate dt_Nascimento) {
+		this.dt_Nascimento = dt_Nascimento;
+	}
+	
+	public String getNr_Nis() {
+		return nr_Nis;
+	}
+	
+	public void setNr_Nis(String nr_Nis) {
+		this.nr_Nis = nr_Nis;
+	}
+	
+	public String getNr_Cpf() {
+		return nr_Cpf;
+	}
+	
+	public void setNr_Cpf(String nr_Cpf) {
+		this.nr_Cpf = nr_Cpf;
+	}
+	
+	public long getCd_Funcionario() {
+		return cd_Funcionario;
+	}
+
+	public void setCd_Funcionario(long cd_Funcionario) {
+		this.cd_Funcionario = cd_Funcionario;
+	}
+
+	public String getNm_Funcionario() {
+		return nm_Funcionario;
+	}
+
+	public void setNm_Funcionario(String nm_Funcionario) {
+		this.nm_Funcionario = nm_Funcionario;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getDs_Senha() {
+		return ds_Senha;
+	}
+
+	public void setDs_Senha(String ds_Senha) {
+		this.ds_Senha = ds_Senha;
+	}
+
+	public double getVl_Salario() {
+		return vl_Salario;
+	}
+
+	public void setVl_Salario(double vl_Salario) {
+		this.vl_Salario = vl_Salario;
+	}
+
+	public double getVl_Porcentagem() {
+		return vl_Porcentagem;
+	}
+
+	public void setVl_Porcentagem(double vl_Porcentagem) {
+		this.vl_Porcentagem = vl_Porcentagem;
+	}
+
+	public double getJornada() {
+		return jornada;
+	}
+
+	public void setJornada(double jornada) {
+		this.jornada = jornada;
+	}
+
+	public boolean isOpt_Salario() {
+		return opt_Salario;
+	}
+
+	public void setOpt_Salario(boolean opt_Salario) {
+		this.opt_Salario = opt_Salario;
+	}
+
+	public boolean isOpt_Porcentagem() {
+		return opt_Porcentagem;
+	}
+
+	public void setOpt_Porcentagem(boolean opt_Porcentagem) {
+		this.opt_Porcentagem = opt_Porcentagem;
+	}
+
+	public List<Permissao> getPermissoes() {
+		return permissoes;
+	}
+
+	public void setPermissoes(List<Permissao> permissoes) {
+		this.permissoes = permissoes;
+	}
+
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+	
+	public String getPispaseb() {
+		return pispaseb;
+	}
+
+	public void setPispaseb(String pispaseb) {
+		this.pispaseb = pispaseb;
+	}
+
+	public Integer getNr_Carteira() {
+		return nr_Carteira;
+	}
+
+	public void setNr_Carteira(Integer nr_Carteira) {
+		this.nr_Carteira = nr_Carteira;
+	}
+
+	public Integer getNr_Serie() {
+		return nr_Serie;
+	}
+
+	public void setNr_Serie(Integer nr_Serie) {
+		this.nr_Serie = nr_Serie;
+	}
+
+	public String getUf() {
+		return uf;
+	}
+
+	public void setUf(String uf) {
+		this.uf = uf;
+	}
+	
+	
+	public String getNr_Telefone() {
+		return nr_Telefone;
+	}
+
+	public void setNr_Telefone(String nr_Telefone) {
+		this.nr_Telefone = nr_Telefone;
+	}
+
+	public String getNr_Celular() {
+		return nr_Celular;
+	}
+
+	public void setNr_Celular(String nr_Celular) {
+		this.nr_Celular = nr_Celular;
+	}
+
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
+	}
+	
+	@JsonIgnore //faz com que o jackson não mande como propriedade o is...
+	@Transient //ignora pelo hibernate para nao serializar ou mandar para o banco de dados
+	public boolean isInativo() {
+		return !this.ativo;
+
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (cd_Funcionario ^ (cd_Funcionario >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Funcionario other = (Funcionario) obj;
+		if (cd_Funcionario != other.cd_Funcionario)
+			return false;
+		return true;
+	}
+
+	
+}

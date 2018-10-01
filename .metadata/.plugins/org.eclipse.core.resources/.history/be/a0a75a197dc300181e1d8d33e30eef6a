@@ -1,0 +1,27 @@
+package com.ddm.salonmanager.api.model;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import javax.annotation.Generated;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
+@StaticMetamodel(Lancamento.class)
+public abstract class Lancamento_ {
+
+	public static volatile SingularAttribute<Lancamento, Long> cd_Lancamento;
+	public static volatile SingularAttribute<Lancamento, Cliente> cliente;
+	public static volatile SingularAttribute<Lancamento, String> observacao;
+	public static volatile SingularAttribute<Lancamento, BigDecimal> vl_Lancamento;
+	public static volatile SingularAttribute<Lancamento, LocalDate> dt_Vencimento;
+	public static volatile SingularAttribute<Lancamento, LocalDate> dt_Pagamento;
+	public static volatile SingularAttribute<Lancamento, Boolean> opt_Agendado;
+	public static volatile SingularAttribute<Lancamento, Funcionario> funcionario;
+	public static volatile SingularAttribute<Lancamento, TipoLancamento> tp_Lancamento;
+	public static volatile SingularAttribute<Lancamento, Servico> servico;
+	public static volatile SingularAttribute<Lancamento, String> ds_Lancamento;
+	public static volatile SingularAttribute<Lancamento, Agendamento> agendamento;
+
+}
+

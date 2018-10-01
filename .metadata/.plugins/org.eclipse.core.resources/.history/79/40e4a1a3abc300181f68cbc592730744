@@ -1,0 +1,117 @@
+package com.ddm.climatempo.api.repository.cidade;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
+
+import com.ddm.climatempo.api.model.Cidade;
+import com.ddm.climatempo.api.model.Marca_;
+import com.ddm.climatempo.api.repository.filter.MarcaFilter;
+import com.ddm.climatempo.api.repository.projection.ResumoMarca;
+
+
+public class MarcaRepositoryImpl implements MarcaRepositoryQuery{
+	
+	@PersistenceContext
+	private EntityManager manager;
+
+	@Override
+	public Page<Cidade> filtrar(MarcaFilter marcaFilter, Pageable pageable) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<Cidade> criteria = builder.createQuery(Cidade.class);
+		Root<Cidade> root = criteria.from(Cidade.class);
+
+		Predicate[] predicates = criarRestricoes(marcaFilter, builder, root);
+		criteria.where(predicates);
+
+		TypedQuery<Cidade> query = manager.createQuery(criteria);
+		adicionarRestricoesDePaginacao(query, pageable);
+
+		return new PageImpl<>(query.getResultList(), pageable, total(marcaFilter));
+		
+	}
+	
+	
+	
+	@Override
+	public Page<ResumoMarca> resumir(MarcaFilter marcaFilter, Pageable pageable) {
+		//sempre necessário possuir o criteria builder para utilizar consultas.
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ResumoMarca> criteria = builder.createQuery(ResumoMarca.class);
+		Root<Cidade> root = criteria.from(Cidade.class);//a consulta será realizada a partir do agendamento
+		
+		criteria.select(builder.construct(ResumoMarca.class 
+				, root.get(Marca_.cd_Marca)
+				, root.get(Marca_.nm_Marca)
+				, root.get(Marca_.ds_Marca)));
+
+
+		Predicate[] predicates = criarRestricoes(marcaFilter, builder, root);
+		criteria.where(predicates);
+
+		TypedQuery<ResumoMarca> query = manager.createQuery(criteria);
+		adicionarRestricoesDePaginacao(query, pageable);
+
+		return new PageImpl<>(query.getResultList(), pageable, total(marcaFilter));
+	}
+	
+	
+	private Predicate[] criarRestricoes(MarcaFilter marcaFilter, CriteriaBuilder builder,
+			Root<Cidade> root) {
+		List<Predicate> predicates = new ArrayList<>();
+
+		if(!StringUtils.isEmpty(marcaFilter.getNome())) {
+			predicates
+					.add(builder.like(
+							builder.lower(root.get(Marca_.nm_Marca)), "%" + marcaFilter.getNome().toLowerCase() + "%"));
+		}
+		
+		if(!StringUtils.isEmpty(marcaFilter.getDescricao())) {
+			predicates
+					.add(builder.like(
+							builder.lower(root.get(Marca_.ds_Marca)), "%" + marcaFilter.getDescricao().toLowerCase() + "%"));
+		}
+		
+		if (marcaFilter.getCodigo() != null) {
+			predicates
+			.add(builder.equal(root.get(Marca_.cd_Marca), marcaFilter.getCodigo()));
+			
+		}
+
+		return predicates.toArray(new Predicate[predicates.size()]);
+	}
+	
+	private void adicionarRestricoesDePaginacao(TypedQuery<?> query, Pageable pageable) {
+		
+		int paginaAtual = pageable.getPageNumber();
+		int totalRegistrosPorPagina = pageable.getPageSize();
+		int primeiroRegistroDaPagina = paginaAtual * totalRegistrosPorPagina;
+		
+		query.setFirstResult(primeiroRegistroDaPagina);
+		query.setMaxResults(totalRegistrosPorPagina);
+	}
+
+	private Long total(MarcaFilter marcaFilter) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+		Root<Cidade> root = criteria.from(Cidade.class);
+		
+		Predicate [] predicates = criarRestricoes(marcaFilter, builder, root);
+		criteria.where(predicates);
+		
+		criteria.select(builder.count(root)); //para contar quantos registros existem.
+		return manager.createQuery(criteria).getSingleResult();
+	}
+}

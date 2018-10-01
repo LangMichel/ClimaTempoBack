@@ -1,0 +1,13 @@
+package com.ddm.salonmanager.api.repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.ddm.climatempo.api.model.Funcionario;
+import com.ddm.salonmanager.api.repository.funcionario.FuncionarioRepositoryQuery;
+
+public interface FuncionarioRepository extends JpaRepository<Funcionario, Long>, FuncionarioRepositoryQuery{
+	
+	public Optional<Funcionario> findByEmail(String email);  
+}

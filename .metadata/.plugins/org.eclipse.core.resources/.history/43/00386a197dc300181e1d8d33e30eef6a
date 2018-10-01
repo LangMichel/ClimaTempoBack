@@ -1,0 +1,20 @@
+package com.ddm.salonmanager.api.model;
+
+import java.time.LocalTime;
+import javax.annotation.Generated;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
+@StaticMetamodel(FuncionarioEscala.class)
+public abstract class FuncionarioEscala_ {
+
+	public static volatile SingularAttribute<FuncionarioEscala, Long> cd_Escala;
+	public static volatile SingularAttribute<FuncionarioEscala, DiaSemana> diaSemana;
+	public static volatile SingularAttribute<FuncionarioEscala, LocalTime> hr_Termino;
+	public static volatile SingularAttribute<FuncionarioEscala, Funcionario> funcionario;
+	public static volatile SingularAttribute<FuncionarioEscala, Boolean> opt_Trabalha;
+	public static volatile SingularAttribute<FuncionarioEscala, LocalTime> hr_Inicio;
+
+}
+

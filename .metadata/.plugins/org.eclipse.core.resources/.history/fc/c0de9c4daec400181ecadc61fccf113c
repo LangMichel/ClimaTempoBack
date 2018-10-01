@@ -1,0 +1,18 @@
+package com.ddm.climatempo.api.model;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+public class Clima {
+	
+	private double tempDia;
+	
+	private double tempMax;
+	
+	private double tempMin;
+
+	
+}

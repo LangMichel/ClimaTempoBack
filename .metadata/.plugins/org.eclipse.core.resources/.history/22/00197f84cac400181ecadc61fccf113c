@@ -1,0 +1,110 @@
+package com.ddm.climatempo.api.service;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+import com.ddm.climatempo.api.model.Cidade;
+import com.ddm.climatempo.api.model.Clima;
+import com.ddm.climatempo.api.repository.CidadeRepository;
+import net.aksingh.owmjapis.core.OWM;
+import net.aksingh.owmjapis.api.APIException;
+import net.aksingh.owmjapis.model.CurrentWeather;
+import net.aksingh.owmjapis.model.CurrentWeatherList;
+import net.aksingh.owmjapis.model.DailyWeatherForecast;
+import net.aksingh.owmjapis.model.param.Weather;
+
+
+@Service
+public class CidadeService {
+	
+	@Autowired
+	private CidadeRepository cidadeRepository;
+	
+	public Cidade atualizar (long cd_Cidade, Cidade cidade) {
+		Cidade cidadeSalva = encontrarCidadePorCodigo(cd_Cidade); 
+		
+		BeanUtils.copyProperties(cidade, cidadeSalva, "cd_Cidade");
+		
+		return cidadeRepository.save(cidadeSalva);
+	}
+	
+	public Cidade encontrarCidadePorCodigo(long cd_Cidade) {
+		Cidade cidadeSalva = cidadeRepository.findOne(cd_Cidade);
+		
+		if (cidadeSalva == null){
+			throw new EmptyResultDataAccessException(1);
+		}
+		return cidadeSalva;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public Cidade consultarClima(long cd_Cidade) throws APIException, ParseException {
+		
+		Cidade cidadeSalva = cidadeRepository.findOne(cd_Cidade);
+		String apiKey;
+		String filtroCidade;
+		
+		apiKey = "eb8b1a9405e659b2ffc78f0a520b1a46";
+		
+		if (cidadeSalva == null){
+			throw new EmptyResultDataAccessException(1);
+		}
+		
+		OWM owm = new OWM(apiKey);
+		
+		filtroCidade = cidadeSalva.getNm_Cidade() + ", " + cidadeSalva.getSg_Pais().toUpperCase();
+		
+		DailyWeatherForecast forecast = owm.dailyWeatherForecastByCityName(filtroCidade);
+		
+		System.out.println(forecast.getDataCount());
+		
+		if (forecast.getDataCount() > 0) {
+			Clima clima = new Clima();
+			List<Clima> forecastClima = new ArrayList<>();
+			Date dataTeste;
+			LocalDate data;
+			ZoneId defaultZoneId = ZoneId.systemDefault();
+			
+			for (int i = 0; forecast.getDataCount() < 6; i++) {
+				clima.setTempDia(forecast.getDataList().get(i).getTempData().getTempDay());
+				clima.setTempMin(forecast.getDataList().get(i).getTempData().getTempMin());
+				clima.setTempMax(forecast.getDataList().get(i).getTempData().getTempMax());
+				SimpleDateFormat teste = new SimpleDateFormat("dd/MM/yyyy");
+				dataTeste = teste.parse((forecast.getDataList().get(i).getDateTime().toString()));
+				System.out.println("data convertida:");
+				System.out.println(dataTeste);
+				forecast.getDataList().get(i).getDateTime().toInstant();
+				Instant instant = dataTeste.toInstant();
+				System.out.println("Instant:");
+				System.out.println(instant);
+				Instant instant2 = forecast.getDataList().get(i).getDateTime().toInstant();
+				System.out.println(instant2);
+				
+				data = instant.atZone(defaultZoneId).toLocalDate();
+				
+				clima.setDataClima(data);
+				clima.setHumidade(forecast.getDataList().get(i).getHumidity());
+				clima.setLinkIcone(forecast.getDataList().get(i).getWeatherList().get(i).getIconLink());
+				clima.setChuva(forecast.getDataList().get(i).getRain());
+				
+				forecastClima.add(clima);
+				
+			}
+			
+			
+		}
+		
+		return null;
+	}
+
+}

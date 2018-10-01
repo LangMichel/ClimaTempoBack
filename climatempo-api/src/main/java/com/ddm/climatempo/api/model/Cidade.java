@@ -1,0 +1,84 @@
+package com.ddm.climatempo.api.model;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+@Entity
+@Table(name="cidade")
+public class Cidade {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private long cd_Cidade;
+
+	@NotNull
+	@Size(min = 3, max = 50)
+	private String nm_Cidade;
+		
+	private String nm_Pais;
+		
+	@NotNull
+	@Size(min = 2, max = 5)
+	private String sg_Pais;
+
+	public long getCd_Cidade() {
+		return cd_Cidade;
+	}
+	
+	public void setCd_Cidade(long cd_Cidade) {
+		this.cd_Cidade = cd_Cidade;
+	}
+	
+	public String getNm_Cidade() {
+		return nm_Cidade;
+	}
+	
+	public void setNm_Cidade(String nm_Cidade) {
+		this.nm_Cidade = nm_Cidade;
+	}
+	
+	public String getNm_Pais() {
+		return nm_Pais;
+	}
+	
+	public void setNm_Pais(String nm_Pais) {
+		this.nm_Pais = nm_Pais;
+	}
+	
+	public String getSg_Pais() {
+		return sg_Pais;
+	}
+	
+	public void setSg_Pais(String sg_Pais) {
+		this.sg_Pais = sg_Pais;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (cd_Cidade ^ (cd_Cidade >>> 32));
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cidade other = (Cidade) obj;
+		if (cd_Cidade != other.cd_Cidade)
+			return false;
+		return true;
+	}
+
+		
+		
+}

@@ -1,0 +1,24 @@
+CREATE TABLE cliente (
+	cd_Cliente BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+	nm_Cliente VARCHAR (50) NOT NULL,
+	email VARCHAR (40) NULL,
+	ds_Senha VARCHAR (100) NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE permissao (
+  codigo bigint(20) NOT NULL,
+  descricao varchar(50) NOT NULL,
+  PRIMARY KEY (codigo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE cliente_permissao (
+  codigo_cliente bigint(20) NOT NULL,
+  codigo_permissao bigint(20) NOT NULL,
+  PRIMARY KEY (codigo_cliente, codigo_permissao),
+  KEY codigo_permissao (codigo_permissao),
+  CONSTRAINT cliente_permissao_cliente FOREIGN KEY (codigo_cliente) REFERENCES cliente (cd_cliente),
+  CONSTRAINT cliente_permissao_codigo FOREIGN KEY (codigo_permissao) REFERENCES permissao (codigo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO CLIENTE (nm_Cliente, email, ds_senha)
+	values ('Teste Hbsis', 'testehbsis@testehbsis.com.br', '$2a$10$PahWNKKjyLbBuJOIe1jju.dJnUeBXWvJS8.u3gQmwuHJHKhmwWLEG');

@@ -1,0 +1,46 @@
+package com.ddm.climatempo.api.repository.projection;
+
+public class ResumoMarca {
+			
+		private Long cd_Marca;
+		private String ds_Marca;
+		private String nm_Marca;
+		
+		public ResumoMarca(Long cd_Marca, String ds_Marca, String nm_Marca) {
+			super();
+			this.cd_Marca = cd_Marca;
+			this.ds_Marca = ds_Marca;
+			this.nm_Marca = nm_Marca;
+		}
+		
+		
+		public String getDs_Marca() {
+			return ds_Marca;
+		}
+
+
+		public void setDs_Marca(String ds_Marca) {
+			this.ds_Marca = ds_Marca;
+		}
+
+
+		public String getNm_Marca() {
+			return nm_Marca;
+		}
+
+
+		public void setNm_Marca(String nm_Marca) {
+			this.nm_Marca = nm_Marca;
+		}
+
+
+		public Long getCd_Marca() {
+			return cd_Marca;
+		}
+
+		public void setCd_Marca(Long cd_Marca) {
+			this.cd_Marca = cd_Marca;
+		}
+		
+
+}

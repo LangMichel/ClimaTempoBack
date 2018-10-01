@@ -1,0 +1,16 @@
+package com.ddm.salonmanager.api.model;
+
+import javax.annotation.Generated;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
+@StaticMetamodel(DiaSemana.class)
+public abstract class DiaSemana_ {
+
+	public static volatile SingularAttribute<DiaSemana, Short> cd_Dia;
+	public static volatile SingularAttribute<DiaSemana, String> sg_Dia;
+	public static volatile SingularAttribute<DiaSemana, String> ds_Dia;
+
+}
+

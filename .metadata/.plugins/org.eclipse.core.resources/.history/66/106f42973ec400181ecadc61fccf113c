@@ -1,0 +1,94 @@
+package com.ddm.climatempo.api.resource;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ddm.climatempo.api.event.RecursoCriadoEvent;
+import com.ddm.climatempo.api.model.Cidade;
+import com.ddm.climatempo.api.repository.CidadeRepository;
+import com.ddm.climatempo.api.repository.filter.CidadeFilter;
+import com.ddm.climatempo.api.repository.projection.ResumoCidade;
+import com.ddm.climatempo.api.service.CidadeService;
+
+//Meta dados. Irá converter o retorno para JSON
+//Mapping é o mapeamento da requisição - quando vier no http.../marcas
+@RestController
+@RequestMapping("/cidades")
+public class CidadeResource {
+	
+	//o sprint procura a implementação e retorna aqui na classe. 
+	@Autowired
+	private CidadeRepository cidadeRepository;
+	
+	@Autowired
+	private CidadeService cidadeService;
+	
+	@Autowired
+	private ApplicationEventPublisher publisher;
+	
+	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_CONSULTAR_CIDADE') and #oauth2.hasScope('read')")
+	public Page<Cidade> pesquisar(CidadeFilter cidadeFilter, Pageable pageable) {
+		return cidadeRepository.filtrar(cidadeFilter, pageable);
+	}
+	
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_CONSULTAR_CIDADE') and #oauth2.hasScope('read')")
+	public Page<ResumoCidade> resumir(CidadeFilter cidadeFilter, Pageable pageable) {
+		return cidadeRepository.resumir(cidadeFilter, pageable);
+	}
+	
+	
+	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CIDADE') and #oauth2.hasScope('write')")
+	public ResponseEntity<Cidade> criar(@Valid @RequestBody Cidade cidade, HttpServletResponse response) {
+		Cidade cidadeSalva = cidadeRepository.save(cidade);
+		
+		publisher.publishEvent(new RecursoCriadoEvent(this, response, cidadeSalva.getCd_Cidade()));
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(cidadeSalva);
+		
+	}
+	
+	@GetMapping("/{cd_Cidade}")
+	@PreAuthorize("hasAuthority('ROLE_CONSULTAR_CIDADE') and #oauth2.hasScope('read')")
+	public ResponseEntity<Cidade> buscarPeloCodigo (@PathVariable Long cd_Cidade) {
+		Cidade cidade = cidadeRepository.findOne(cd_Cidade);
+		return cidade != null ? ResponseEntity.ok(cidade) : ResponseEntity.notFound().build(); 
+		//return cidadeRepository.findOne(cd_Marca);
+	}
+	
+	@DeleteMapping("/{cd_Cidade}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long cd_Marca) {
+		cidadeRepository.delete(cd_Marca);
+		
+	}
+	
+	
+	@PutMapping("/{cd_Cidade}")
+	@PreAuthorize("hasAuthority('ROLE_EDITAR_MARCA') and #oauth2.hasScope('write')")
+	public ResponseEntity<Cidade> atualizar(@PathVariable Long cd_Marca, @Valid @RequestBody Cidade marca) {
+		Cidade marcaSalva = cidadeService.atualizar(cd_Marca, marca);
+		return ResponseEntity.ok(marcaSalva);
+		
+	}
+	
+}

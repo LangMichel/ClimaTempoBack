@@ -1,0 +1,42 @@
+package com.ddm.climatempo.api.service;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import com.ddm.climatempo.api.model.Cliente;
+import com.ddm.climatempo.api.repository.ClienteRepository;
+
+
+@Service
+public class ClienteService {
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	public Cliente atualizar (long cd_Cliente, Cliente cliente) {
+		Cliente clienteSalvo = encontrarClientePorCodigo(cd_Cliente); 
+		
+		BeanUtils.copyProperties(cliente, clienteSalvo, "cd_Cliente"); //Essa classe beanUtils copia os atributos para a variavel ou seja cliente para clienteSalvo
+		return clienteRepository.save(clienteSalvo);
+	}
+
+
+	public void atualizarAtivo(long cd_Cliente, Boolean ativo) {
+	
+		Cliente clienteSalvo = encontrarClientePorCodigo(cd_Cliente);
+		clienteSalvo.setAtivo(ativo);
+		clienteRepository.save(clienteSalvo);	
+	}
+
+	private Cliente encontrarClientePorCodigo(long cd_Cliente) {
+		Cliente clienteSalvo = clienteRepository.findOne(cd_Cliente);
+		
+		if (clienteSalvo == null){
+			throw new EmptyResultDataAccessException(1);
+		}
+		return clienteSalvo;
+	}
+
+}

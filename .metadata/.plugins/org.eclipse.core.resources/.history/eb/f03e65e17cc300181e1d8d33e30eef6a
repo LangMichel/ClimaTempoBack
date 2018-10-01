@@ -1,0 +1,124 @@
+package com.ddm.salonmanager.api.resource;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ddm.climatempo.api.event.RecursoCriadoEvent;
+import com.ddm.climatempo.api.exceptionhandler.SalonManagerExceptionHandler.Erro;
+import com.ddm.salonmanager.api.model.FuncionarioServico;
+import com.ddm.salonmanager.api.repository.FuncionarioServicoRepository;
+import com.ddm.salonmanager.api.repository.filter.FuncionarioServicoFilter;
+import com.ddm.salonmanager.api.repository.projection.ResumoFuncionarioServico;
+import com.ddm.salonmanager.api.service.FuncionarioServicoService;
+import com.ddm.salonmanager.api.service.exception.FuncionarioServicoInexistenteOuInativoException;
+import com.ddm.salonmanager.api.service.exception.FuncionarioServicoServInexistenteOuInativoException;
+
+@RestController //meta dados. converte json em objeto
+@RequestMapping ("/colaborador-servico")
+public class FuncionarioServicoResource {
+	
+	
+	@Autowired
+	private FuncionarioServicoRepository funcionarioServicoRepository;
+	
+	@Autowired
+	private FuncionarioServicoService funcionarioServicoService;
+	
+	@Autowired
+	private ApplicationEventPublisher publisher;
+	
+	@Autowired
+	private MessageSource messageSource;
+
+	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_CONSULTAR_FUNCIONARIO-SERVICO') and #oauth2.hasScope('read')")
+	public Page<FuncionarioServico> pesquisar(FuncionarioServicoFilter funcionarioServicoFilter, Pageable pageable) {
+		return funcionarioServicoRepository.filtrar(funcionarioServicoFilter, pageable);
+		 //o preAuthorize pode estar antes ou depois do get/post/put...
+		//o preAuthorize é a autorização do usuário, o oauth2.hasScope é do client.
+	}
+	
+	//parametro para distinguir qual método getmapping usar, se é pesquisar ou resumir
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_CONSULTAR_FUNCIONARIO-SERVICO') and #oauth2.hasScope('read')")
+	public Page<ResumoFuncionarioServico> resumir(FuncionarioServicoFilter funcionarioServicoFilter, Pageable pageable) {
+		return funcionarioServicoRepository.resumir(funcionarioServicoFilter, pageable);
+	}
+
+	@PostMapping("/{cd_FuncionarioSelecionado}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_FUNCIONARIO-SERVICO') and #oauth2.hasScope('write')")
+	public ResponseEntity<List<FuncionarioServico>> criar(@Valid @RequestBody List<ResumoFuncionarioServico> funcionario, @PathVariable Long cd_FuncionarioSelecionado,HttpServletResponse response){
+		List<FuncionarioServico> funcionarioServicoSalvo = funcionarioServicoService.salvar(funcionario, cd_FuncionarioSelecionado);
+		publisher.publishEvent(new RecursoCriadoEvent(this, response, cd_FuncionarioSelecionado));
+		return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioServicoSalvo);
+		
+	}
+	
+	@GetMapping("/{cd_FuncionarioServico}")
+	@PreAuthorize("hasAuthority('ROLE_CONSULTAR_FUNCIONARIO-SERVICO') and #oauth2.hasScope('read')")
+	public ResponseEntity<FuncionarioServico> buscarPeloCodigo (@PathVariable Long cd_FuncionarioServico) {
+		FuncionarioServico funcionarioServico = funcionarioServicoRepository.findOne(cd_FuncionarioServico);
+		return funcionarioServico != null ? ResponseEntity.ok(funcionarioServico) : ResponseEntity.notFound().build();
+	}
+	
+	@DeleteMapping("/{cd_FuncionarioServico}")
+	@ResponseStatus(HttpStatus.NO_CONTENT) //retornará codigo 204, significa que efetuou com sucesso porém nao existe retorno
+	public void remover(@PathVariable Long cd_FuncionarioServico) {
+		funcionarioServicoRepository.delete(cd_FuncionarioServico);
+		
+	}
+	
+	@ExceptionHandler({ FuncionarioServicoInexistenteOuInativoException.class })
+	public ResponseEntity<Object> handleFuncionarioServicoInexistenteOuInativoException (FuncionarioServicoInexistenteOuInativoException ex) {
+		
+		String mensagemUsuario = messageSource.getMessage("mensagem.funcionarioservicofun.nulo.inativo", null, LocaleContextHolder.getLocale()); //poderia pegar local ingles e de onde estiver.
+		String mensagemDesenvolvimento = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvimento));
+		return ResponseEntity.badRequest().body(erros);
+		
+	}
+	
+	@ExceptionHandler({ FuncionarioServicoServInexistenteOuInativoException.class })
+	public ResponseEntity<Object> handleFuncionarioServicoServInexistenteOuInativoException (FuncionarioServicoServInexistenteOuInativoException ex) {
+		
+		String mensagemUsuario = messageSource.getMessage("mensagem.funcionarioservicoserv.nulo.inativo", null, LocaleContextHolder.getLocale()); //poderia pegar local ingles e de onde estiver.
+		String mensagemDesenvolvimento = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvimento));
+		return ResponseEntity.badRequest().body(erros);
+		
+	}
+	
+	
+	@GetMapping("/pesquisar-servico-funcionario/{cd_Funcionario}")
+	@PreAuthorize("hasAuthority('ROLE_CONSULTAR_FUNCIONARIO-SERVICO') and #oauth2.hasScope('read')")
+	public Page<ResumoFuncionarioServico> listarServicoFuncionario (@PathVariable Long cd_Funcionario) {
+		System.out.println("Entrou no listar servico");
+		//FuncionarioServico funcionarioServicoSalvo = funcionarioServicoRepository.listarServicoFuncionario(cd_Funcionario);
+		return funcionarioServicoRepository.listarServicoFuncionario(cd_Funcionario);
+	}
+	
+	
+
+}

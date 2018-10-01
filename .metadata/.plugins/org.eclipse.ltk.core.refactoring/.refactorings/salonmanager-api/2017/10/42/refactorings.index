@@ -1,0 +1,5 @@
+1508202552065	Extract method 'adicionarHeaderLocation'
+1508289690682	Extract method 'encontrarPessoa'
+1508292621763	Encapsulate field 'vl_Salario'
+1508294780667	Rename resource 'V03__criar_e_registrar_funcionario'
+1508463621298	Rename resource 'V04__criar_agendamento.sql'

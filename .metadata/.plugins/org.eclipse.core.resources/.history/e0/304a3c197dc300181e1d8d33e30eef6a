@@ -1,0 +1,16 @@
+package com.ddm.salonmanager.api.model;
+
+import javax.annotation.Generated;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
+@StaticMetamodel(FuncionarioServico.class)
+public abstract class FuncionarioServico_ {
+
+	public static volatile SingularAttribute<FuncionarioServico, Long> cd_Funcionarioservico;
+	public static volatile SingularAttribute<FuncionarioServico, Funcionario> funcionario;
+	public static volatile SingularAttribute<FuncionarioServico, Servico> servico;
+
+}
+

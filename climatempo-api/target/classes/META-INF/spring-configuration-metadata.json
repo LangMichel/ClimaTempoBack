@@ -1,0 +1,28 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.ddm.climatempo.api.config.property.ClimaTempoApiProperty",
+      "name": "climatempo",
+      "type": "com.ddm.climatempo.api.config.property.ClimaTempoApiProperty"
+    },
+    {
+      "sourceType": "com.ddm.climatempo.api.config.property.ClimaTempoApiProperty",
+      "name": "climatempo.seguranca",
+      "sourceMethod": "public com.ddm.climatempo.api.config.property.ClimaTempoApiProperty.Seguranca getSeguranca() ",
+      "type": "com.ddm.climatempo.api.config.property.ClimaTempoApiProperty$Seguranca"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.ddm.climatempo.api.config.property.ClimaTempoApiProperty",
+      "name": "climatempo.origin-permitida",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.ddm.climatempo.api.config.property.ClimaTempoApiProperty$Seguranca",
+      "name": "climatempo.seguranca.enable-https",
+      "type": "java.lang.Boolean"
+    }
+  ]
+}

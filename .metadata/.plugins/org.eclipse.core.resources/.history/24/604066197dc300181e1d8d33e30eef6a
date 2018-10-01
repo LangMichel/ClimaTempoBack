@@ -1,0 +1,19 @@
+package com.ddm.salonmanager.api.model;
+
+import java.time.LocalTime;
+import javax.annotation.Generated;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
+@StaticMetamodel(FuncionamentoEstabelecimento.class)
+public abstract class FuncionamentoEstabelecimento_ {
+
+	public static volatile SingularAttribute<FuncionamentoEstabelecimento, Boolean> opt_Funcionamento;
+	public static volatile SingularAttribute<FuncionamentoEstabelecimento, LocalTime> hr_Fechamento;
+	public static volatile SingularAttribute<FuncionamentoEstabelecimento, LocalTime> hr_Abertura;
+	public static volatile SingularAttribute<FuncionamentoEstabelecimento, Long> cd_Funcionamento;
+	public static volatile SingularAttribute<FuncionamentoEstabelecimento, String> dia;
+
+}
+

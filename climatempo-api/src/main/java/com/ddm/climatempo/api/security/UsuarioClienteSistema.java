@@ -1,0 +1,24 @@
+package com.ddm.climatempo.api.security;
+
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+
+import com.ddm.climatempo.api.model.Cliente;
+
+public class UsuarioClienteSistema extends User {
+	private static final long serialVersionUID = 1L;
+	
+	private Cliente cliente;
+
+	public UsuarioClienteSistema(Cliente cliente, Collection<? extends GrantedAuthority> authorities) {
+		super(cliente.getEmail(), cliente.getDs_Senha(), authorities);
+	
+		this.cliente = cliente;
+	}
+	
+	public Cliente getCliente() {
+		return cliente;
+	}
+}

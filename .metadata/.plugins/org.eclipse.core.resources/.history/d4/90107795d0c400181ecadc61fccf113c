@@ -1,0 +1,88 @@
+package com.ddm.climatempo.api.model;
+
+import java.time.LocalDate;
+
+public class Clima {
+	
+	private double tempDia;
+	
+	private double tempMax;
+	
+	private double tempMin;
+	
+	private String linkIcone;
+	
+	private LocalDate dataClima;
+	
+	private double humidade;
+
+	private Double chuva;
+	
+	private String clima;
+
+	public double getTempDia() {
+		return tempDia;
+	}
+
+	public void setTempDia(double tempDia) {
+		this.tempDia = tempDia;
+	}
+
+	public double getTempMax() {
+		return tempMax;
+	}
+
+	public void setTempMax(double tempMax) {
+		this.tempMax = tempMax;
+	}
+
+	public double getTempMin() {
+		return tempMin;
+	}
+
+	public void setTempMin(double tempMin) {
+		this.tempMin = tempMin;
+	}
+
+	public String getLinkIcone() {
+		return linkIcone;
+	}
+
+	public void setLinkIcone(String linkIcone) {
+		this.linkIcone = linkIcone;
+	}
+
+	public LocalDate getDataClima() {
+		return dataClima;
+	}
+
+	public void setDataClima(LocalDate dataClima) {
+		this.dataClima = dataClima;
+	}
+
+	public double getHumidade() {
+		return humidade;
+	}
+
+	public void setHumidade(double humidade) {
+		this.humidade = humidade;
+	}
+
+	public Double getChuva() {
+		return chuva;
+	}
+
+	public void setChuva(Double chuva) {
+		this.chuva = chuva;
+	}
+
+	public String getClima() {
+		return clima;
+	}
+
+	public void setClima(String clima) {
+		this.clima = clima;
+	}
+	
+}
+

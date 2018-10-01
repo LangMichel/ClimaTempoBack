@@ -1,0 +1,79 @@
+package com.ddm.climatempo.api.service;
+
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+import com.ddm.climatempo.api.model.Cidade;
+import com.ddm.climatempo.api.repository.CidadeRepository;
+import net.aksingh.owmjapis.core.OWM;
+import net.aksingh.owmjapis.api.APIException;
+import net.aksingh.owmjapis.model.CurrentWeather;
+import net.aksingh.owmjapis.model.CurrentWeatherList;
+import net.aksingh.owmjapis.model.DailyWeatherForecast;
+import net.aksingh.owmjapis.model.param.Weather;
+
+
+@Service
+public class CidadeService {
+	
+	@Autowired
+	private CidadeRepository cidadeRepository;
+	
+	public Cidade atualizar (long cd_Cidade, Cidade cidade) {
+		Cidade cidadeSalva = encontrarCidadePorCodigo(cd_Cidade); 
+		
+		BeanUtils.copyProperties(cidade, cidadeSalva, "cd_Cidade");
+		
+		return cidadeRepository.save(cidadeSalva);
+	}
+	
+	public Cidade encontrarCidadePorCodigo(long cd_Cidade) {
+		Cidade cidadeSalva = cidadeRepository.findOne(cd_Cidade);
+		
+		if (cidadeSalva == null){
+			throw new EmptyResultDataAccessException(1);
+		}
+		return cidadeSalva;
+	}
+	
+	public Cidade consultarClima(long cd_Cidade) throws APIException {
+		Cidade cidadeSalva = cidadeRepository.findOne(cd_Cidade);
+		String teste;
+		String texto;
+		teste = "eb8b1a9405e659b2ffc78f0a520b1a46";
+		if (cidadeSalva == null){
+			throw new EmptyResultDataAccessException(1);
+		}
+		
+		System.out.println("antes de atribuir chave");
+		
+		OWM owm = new OWM(teste);
+		texto = cidadeSalva.getNm_Cidade() + ", " + cidadeSalva.getSg_Pais().toUpperCase();
+		
+		System.out.println(texto);
+		CurrentWeather clima = owm.currentWeatherByCityName(texto);
+
+		DailyWeatherForecast teste2 = owm.dailyWeatherForecastByCityName(texto);
+		System.out.println("depois de atribuir chave");
+		//System.out.println(clima.getMainData().getTempKf());
+		//System.out.println(clima.getMainData().getTempMax());
+		//System.out.println((clima.getMainData().getTempMin() - 32) / 1.8 );
+		System.out.println(teste2.getDataList());
+		System.out.println(teste2.getDataList().get(0).getHumidity());
+		System.out.println(teste2.getDataList().get(1).getTempData().getTempMin());
+		System.out.println(teste2.getDataList().get(2).getTempData().getTempMin());
+		System.out.println(teste2.getDataList().get(0).getTempData().getTempDay());
+		System.out.println(teste2.getDataList().get(1).getTempData().getTempDay());
+		System.out.println(teste2.getDataList().get(0).getTempData().getTempMorning());
+		System.out.println(teste2.getDataList().get(1).getTempData().getTempMorning());
+		
+		
+		
+		
+		return null;
+	}
+
+}

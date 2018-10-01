@@ -1,0 +1,47 @@
+package com.ddm.climatempo.api.config.property;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+//é necessário atribuir no arquivo pom.xml a dependecia configuration-processor do spring boot.
+@ConfigurationProperties("salonmanager") //nome da configuração.
+public class SalonManagerApiProperty {
+//classe de configuração utilizando funcionalidades do spring.
+	//A exemplo de como diferenciar ao subir a aplicação em produção ou desenvolvimento
+    
+	private String originPermitida = "http://localhost:4200";
+	//private String originPermitida = "https://salonmanager-angular.herokuapp.com";
+	
+
+
+	//com essa variavel conseguimos separar o que é de segurança pois podemos executar
+	//SalonManager.seguranca.enableHttps das outras questões como infra-estrutura.
+	private final Seguranca seguranca = new Seguranca();
+	
+	
+	public Seguranca getSeguranca() {
+		return seguranca;
+	}
+
+	public String getOriginPermitida() {
+		return originPermitida;
+	}
+	
+	
+	public void setOriginPermitida(String originPermitida) {
+		this.originPermitida = originPermitida;
+	}
+
+	public static class Seguranca {
+		//inicia-se como false. O tipo primitivo, boolean, o valor default é falso.
+		private boolean enableHttps;
+
+		public boolean isEnableHttps() {
+			return enableHttps;
+		}
+
+		public void setEnableHttps(boolean enableHttps) {
+			this.enableHttps = enableHttps;
+		}
+	
+	 }
+
+}

@@ -1,0 +1,61 @@
+package com.ddm.climatempo.api.model;
+
+import javax.persistence.Embeddable;
+
+@Embeddable
+public class Endereco {
+	
+	private String ds_Logradouro;
+	private String nr_Numero;
+	private String ds_Complemento;
+	private String ds_Bairro;
+	private String nr_Cep;
+	private String ds_Cidade;
+	private String ds_Estado;
+	
+	public String getDs_Logradouro() {
+		return ds_Logradouro;
+	}
+	public void setDs_Logradouro(String ds_Logradouro) {
+		this.ds_Logradouro = ds_Logradouro;
+	}
+	public String getNr_Numero() {
+		return nr_Numero;
+	}
+	public void setNr_Numero(String nr_Numero) {
+		this.nr_Numero = nr_Numero;
+	}
+	public String getDs_Complemento() {
+		return ds_Complemento;
+	}
+	public void setDs_Complemento(String ds_Complemento) {
+		this.ds_Complemento = ds_Complemento;
+	}
+	public String getDs_Bairro() {
+		return ds_Bairro;
+	}
+	public void setDs_Bairro(String ds_Bairro) {
+		this.ds_Bairro = ds_Bairro;
+	}
+	public String getNr_Cep() {
+		return nr_Cep;
+	}
+	public void setNr_Cep(String nr_Cep) {
+		this.nr_Cep = nr_Cep;
+	}
+	public String getDs_Cidade() {
+		return ds_Cidade;
+	}
+	public void setDs_Cidade(String ds_Cidade) {
+		this.ds_Cidade = ds_Cidade;
+	}
+	public String getDs_Estado() {
+		return ds_Estado;
+	}
+	public void setDs_Estado(String ds_Estado) {
+		this.ds_Estado = ds_Estado;
+	}
+	
+	
+
+}

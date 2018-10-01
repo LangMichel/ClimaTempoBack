@@ -1,0 +1,10 @@
+CREATE TABLE cliente (
+	cd_Cliente BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+	nm_Cliente VARCHAR (50) NOT NULL,
+	email VARCHAR (40) NULL,
+	ds_Senha VARCHAR (100) NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO CLIENTE (nm_Cliente, email, ds_senha)
+	values ('Teste Hbsis', testehbsis@testehbsis.com.br, '$2a$10$PahWNKKjyLbBuJOIe1jju.dJnUeBXWvJS8.u3gQmwuHJHKhmwWLEG');

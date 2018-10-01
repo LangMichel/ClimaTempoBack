@@ -1,0 +1,104 @@
+package com.ddm.salonmanager.api.resource;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ddm.climatempo.api.event.RecursoCriadoEvent;
+import com.ddm.salonmanager.api.model.Servico;
+import com.ddm.salonmanager.api.repository.ServicoRepository;
+import com.ddm.salonmanager.api.repository.filter.ServicoFilter;
+import com.ddm.salonmanager.api.repository.projection.ResumoServico;
+import com.ddm.salonmanager.api.service.ServicoService;
+
+@RestController
+@RequestMapping("/servico")
+public class ServicoResource {
+	
+	//o sprint procura a implementação e retorna aqui na classe. 
+		@Autowired
+		private ServicoRepository servicoRepository;
+		
+		@Autowired
+		private ServicoService servicoService;
+		
+		@Autowired
+		private ApplicationEventPublisher publisher;
+		
+		@GetMapping
+		@PreAuthorize("hasAuthority('ROLE_CONSULTAR_SERVICO') and #oauth2.hasScope('read')")
+		public Page<Servico> pesquisar(ServicoFilter servicoFilter, Pageable pageable) {
+			return servicoRepository.filtrar(servicoFilter, pageable);
+			 //o preAuthorize pode estar antes ou depois do get/post/put...
+			//o preAuthorize é a autorização do usuário, o oauth2.hasScope é do client.
+		}
+		
+		@GetMapping(params = "resumo")
+		@PreAuthorize("hasAuthority('ROLE_CONSULTAR_SERVICO') and #oauth2.hasScope('read')")
+		public Page<ResumoServico> resumir(ServicoFilter servicoFilter, Pageable pageable) {
+			return servicoRepository.resumir(servicoFilter, pageable);
+		}
+		
+		//requestbody mapeia a classe e os campos que irão salvar
+		//Valid vai validar a classe servico conforme informado no campo nm_Servico sendo not null. a Anotaçaõ valida a classe.
+		@PostMapping
+		@PreAuthorize("hasAuthority('ROLE_CADASTRAR_SERVICO') and #oauth2.hasScope('write')")
+		public ResponseEntity<Servico> criar(@Valid @RequestBody Servico servico, HttpServletResponse response) {
+			Servico servicoSalvo = servicoRepository.save(servico);
+			
+			publisher.publishEvent(new RecursoCriadoEvent(this, response, servicoSalvo.getCd_Servico()));
+			
+			return ResponseEntity.status(HttpStatus.CREATED).body(servicoSalvo);
+			//retornará o status 201 - created no html
+			
+		}
+		
+		@GetMapping("/{cd_Servico}")
+		@PreAuthorize("hasAuthority('ROLE_CONSULTAR_SERVICO') and #oauth2.hasScope('read')")
+		public ResponseEntity<Servico> buscarPeloCodigo (@PathVariable Long cd_Servico) {
+			Servico servico = servicoRepository.findOne(cd_Servico);
+			return servico != null ? ResponseEntity.ok(servico) : ResponseEntity.notFound().build(); 
+		}
+		
+		@DeleteMapping("/{cd_Servico}")
+		@ResponseStatus(HttpStatus.NO_CONTENT) //retornará codigo 204, significa que efetuou com sucesso porém nao existe retorno
+		public void remover(@PathVariable Long cd_Servico) {
+			servicoRepository.delete(cd_Servico);
+			
+		}
+		
+		
+		@PutMapping("/{cd_Servico}")
+		@PreAuthorize("hasAuthority('ROLE_EDITAR_SERVICO') and #oauth2.hasScope('write')")
+		public ResponseEntity<Servico> atualizar(@PathVariable Long cd_Servico, @Valid @RequestBody Servico servico) {
+			Servico servicoSalvo = servicoService.atualizar(cd_Servico, servico);
+			return ResponseEntity.ok(servicoSalvo);
+			
+		}
+		
+		
+		@PutMapping("/{cd_Servico}/ativo")
+		@PreAuthorize("hasAuthority('ROLE_EDITAR_SERVICO') and #oauth2.hasScope('write')")
+		@ResponseStatus(HttpStatus.NO_CONTENT)
+		public void atualizarAtivo(@PathVariable long cd_Servico, @RequestBody Boolean ativo) {
+			servicoService.atualizarAtivo(cd_Servico, ativo);
+		}
+		
+
+}

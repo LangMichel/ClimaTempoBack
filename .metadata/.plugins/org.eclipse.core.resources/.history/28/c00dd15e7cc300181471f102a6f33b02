@@ -1,0 +1,122 @@
+package com.ddm.salonmanager.api.resource;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ddm.climatempo.api.event.RecursoCriadoEvent;
+import com.ddm.salonmanager.api.exceptionhandler.SalonManagerExceptionHandler.Erro;
+import com.ddm.salonmanager.api.model.Agendamento;
+import com.ddm.salonmanager.api.repository.AgendamentoRepository;
+import com.ddm.salonmanager.api.repository.filter.AgendamentoFilter;
+import com.ddm.salonmanager.api.repository.projection.ResumoAgendamento;
+import com.ddm.salonmanager.api.service.AgendamentoService;
+import com.ddm.salonmanager.api.service.exception.PessoaInexistenteOuInativaException;
+
+@RestController // meta dados. converte json em objeto
+@RequestMapping("/agendamentos")
+public class AgendamentoResource {
+
+	@Autowired
+	private AgendamentoRepository agendamentoRepository;
+
+	@Autowired
+	private AgendamentoService agendamentoService;
+
+	@Autowired
+	private ApplicationEventPublisher publisher;
+
+	@Autowired
+	private MessageSource messageSource;
+
+	// paginação do spring data
+	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_AGENDAMENTO') and #oauth2.hasScope('read')")
+	public Page<Agendamento> pesquisar(AgendamentoFilter agendamentoFilter, Pageable pageable) {
+		return agendamentoRepository.filtrar(agendamentoFilter, pageable);
+		 //o preAuthorize pode estar antes ou depois do get/post/put...
+		//o preAuthorize é a autorização do usuário, o oauth2.hasScope é do client.
+	}
+	
+	//parametro para distinguir qual método getmapping usar, se é pesquisar ou resumir
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_AGENDAMENTO') and #oauth2.hasScope('read')")
+	public Page<ResumoAgendamento> resumir(AgendamentoFilter agendamentoFilter, Pageable pageable) {
+		return agendamentoRepository.resumir(agendamentoFilter, pageable);
+	}
+	
+	
+
+	@GetMapping("/{cd_Agendamento}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_AGENDAMENTO') and #oauth2.hasScope('read')")
+	public ResponseEntity<Agendamento> buscarPeloCodigo(@PathVariable Long cd_Agendamento) {
+		Agendamento agendamento = agendamentoRepository.findOne(cd_Agendamento);
+		return agendamento != null ? ResponseEntity.ok(agendamento) : ResponseEntity.notFound().build();
+	}
+
+	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_AGENDAMENTO') and #oauth2.hasScope('write')")
+	public ResponseEntity<Agendamento> criar(@Valid @RequestBody Agendamento agendamento,
+			HttpServletResponse response) {
+		Agendamento agendamentoSalvo = agendamentoService.salvar(agendamento);
+		publisher.publishEvent(new RecursoCriadoEvent(this, response, agendamentoSalvo.getCd_Agendamento()));
+		return ResponseEntity.status(HttpStatus.CREATED).body(agendamentoSalvo);
+	}
+
+	@DeleteMapping("/{cd_Agendamento}")
+	@ResponseStatus(HttpStatus.NO_CONTENT) // retornará codigo 204, significa que efetuou com sucesso porém nao existe retorno
+	public void remover(@PathVariable Long cd_Agendamento) {
+		agendamentoRepository.delete(cd_Agendamento);
+
+	}
+	
+	
+	
+	@PutMapping("/{cd_Agendamento}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_AGENDAMENTO') and #oauth2.hasScope('write')")//TODO:Criar a permissão de editar agendamento
+	public ResponseEntity<Agendamento> atualizar(@PathVariable Long cd_Agendamento, @Valid @RequestBody Agendamento agendamento) {
+		try {		
+			Agendamento agendamentoSalvo = agendamentoService.atualizar(cd_Agendamento, agendamento);
+			return ResponseEntity.ok(agendamentoSalvo);
+		}catch (IllegalArgumentException e) {
+			return ResponseEntity.notFound().build();
+			
+		}
+		
+	}
+	
+	
+
+	@ExceptionHandler({ PessoaInexistenteOuInativaException.class })
+	public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex) {
+		String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null,
+				LocaleContextHolder.getLocale()); // poderia pegar local ingles e de onde estiver.
+		String mensagemDesenvolvimento = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvimento));
+		return ResponseEntity.badRequest().body(erros);
+
+	}
+
+}

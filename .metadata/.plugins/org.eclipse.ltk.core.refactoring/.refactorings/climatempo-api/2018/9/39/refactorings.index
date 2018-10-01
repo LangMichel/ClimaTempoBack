@@ -1,0 +1,90 @@
+1538178693014	Rename package 'com.ddm.salonmanager.api'
+1538178791617	Rename package 'com.ddm.salonmanager.api.config'
+1538179062721	Rename compilation unit 'SalonmanagerApiApplication.java'
+1538179308799	Rename package 'com.ddm.salonmanager.api.config.property'
+1538179339109	Rename type 'SalonManagerApiProperty'
+1538179591465	Rename package 'com.ddm.salonmanager.api.config.token'
+1538179750838	Rename package 'com.ddm.salonmanager.api.cors'
+1538179842424	Rename package 'com.ddm.salonmanager.api.event'
+1538179891683	Rename package 'com.ddm.salonmanager.api.event.listener'
+1538179957068	Rename package 'com.ddm.salonmanager.api.exceptionhandler'
+1538180176247	Rename type 'SalonManagerExceptionHandler'
+1538180270011	Delete elements
+1538180286328	Delete elements
+1538180300727	Delete element
+1538180313166	Delete elements
+1538180319620	Delete element
+1538180330894	Delete element
+1538180336803	Delete element
+1538180341591	Delete element
+1538180346244	Delete element
+1538180352530	Delete element
+1538180360633	Delete element
+1538180371018	Delete elements
+1538180393255	Delete element
+1538180403242	Delete elements
+1538180426287	Delete element
+1538180448767	Delete element
+1538180477253	Rename package 'com.ddm.salonmanager.api.model'
+1538180503754	Rename package 'com.ddm.salonmanager.api.repository'
+1538180520927	Rename package 'com.ddm.salonmanager.api.repository.cliente'
+1538180551257	Delete elements
+1538180581733	Rename package 'com.ddm.salonmanager.api.repository.filter'
+1538180598613	Rename package 'com.ddm.salonmanager.api.repository.funcionario'
+1538180616449	Rename package 'com.ddm.salonmanager.api.repository.marca'
+1538180631162	Delete elements
+1538180644081	Rename package 'com.ddm.salonmanager.api.repository.projection'
+1538180659963	Rename package 'com.ddm.salonmanager.api.resource'
+1538180716473	Rename package 'com.ddm.salonmanager.api.security'
+1538180986937	Rename package 'com.ddm.salonmanager.api.security.util'
+1538181094601	Rename package 'com.ddm.salonmanager.api.service'
+1538181265108	Delete elements
+1538181282781	Rename package 'com.ddm.salonmanager.api.service.exception'
+1538181302486	Rename package 'com.ddm.salonmanager.api.token'
+1538182851709	Delete element
+1538184068808	Delete element
+1538184077458	Delete element
+1538184094155	Delete element
+1538184138423	Delete element
+1538184170840	Delete element
+1538184178724	Delete element
+1538184184135	Delete element
+1538184268047	Delete element
+1538184414786	Delete element
+1538191323924	Delete element
+1538192290665	Rename resource 'V02__criar_e_registrar_pessoa.sql'
+1538194971347	Rename type 'Marca'
+1538195194842	Delete element
+1538200016710	Rename package 'com.ddm.climatempo.api.repository.marca'
+1538200258756	Rename type 'MarcaRepositoryImpl'
+1538200276644	Rename type 'MarcaRepositoryQuery'
+1538200608353	Rename type 'ResumoMarca'
+1538201472739	Rename local variable 'marcaFilter'
+1538201515998	Rename type 'MarcaFilter'
+1538201690404	Rename local variable 'marcaFilter'
+1538201716540	Rename local variable 'marcaFilter'
+1538201870849	Rename type 'MarcaRepository'
+1538262838777	Rename type 'MarcaResource'
+1538262893365	Rename field 'marcaRepository'
+1538262918880	Rename type 'MarcaService'
+1538263062814	Rename field 'marcaService'
+1538263092986	Rename local variable 'marcaFilter'
+1538263118804	Rename local variable 'marcaFilter'
+1538263152789	Rename local variable 'marca'
+1538263260744	Rename local variable 'marcaSalva'
+1538263334250	Rename local variable 'cd_Marca'
+1538263341797	Rename local variable 'marca'
+1538263374031	Rename local variable 'cd_Marca'
+1538263415594	Rename local variable 'cd_Marca'
+1538263424969	Rename local variable 'marca'
+1538263436422	Rename local variable 'marcaSalva'
+1538263492238	Rename field 'marcaRepository'
+1538263502598	Rename local variable 'marca'
+1538263540629	Rename local variable 'cd_Marca'
+1538263546410	Rename local variable 'marca'
+1538263561379	Rename local variable 'marcaSalva'
+1538263595441	Rename local variable 'cd_Marca'
+1538263605363	Rename local variable 'marcaSalva'
+1538264139263	Rename local variable 'marcaFilter'
+1538264245106	Rename local variable 'marcaFilter'
+1538264626847	Rename method 'encontrarMarcaPorCodigo'

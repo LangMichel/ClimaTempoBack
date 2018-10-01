@@ -1,0 +1,60 @@
+package com.ddm.climatempo.api.service;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+import com.ddm.climatempo.api.model.Cidade;
+import com.ddm.climatempo.api.repository.CidadeRepository;
+import net.aksingh.owmjapis.core.OWM;
+import net.aksingh.owmjapis.api.APIException;
+import net.aksingh.owmjapis.model.CurrentWeather;
+
+
+@Service
+public class CidadeService {
+	
+	@Autowired
+	private CidadeRepository cidadeRepository;
+	
+	public Cidade atualizar (long cd_Cidade, Cidade cidade) {
+		Cidade cidadeSalva = encontrarCidadePorCodigo(cd_Cidade); 
+		
+		BeanUtils.copyProperties(cidade, cidadeSalva, "cd_Cidade");
+		
+		return cidadeRepository.save(cidadeSalva);
+	}
+	
+	public Cidade encontrarCidadePorCodigo(long cd_Cidade) {
+		Cidade cidadeSalva = cidadeRepository.findOne(cd_Cidade);
+		
+		if (cidadeSalva == null){
+			throw new EmptyResultDataAccessException(1);
+		}
+		return cidadeSalva;
+	}
+	
+	public Cidade consultarClima(long cd_Cidade) throws APIException {
+		Cidade cidadeSalva = cidadeRepository.findOne(cd_Cidade);
+		String teste;
+		teste = "eb8b1a9405e659b2ffc78f0a520b1a46";
+		if (cidadeSalva == null){
+			throw new EmptyResultDataAccessException(1);
+		}
+		
+		System.out.println("antes de atribuir chave");
+		
+		OWM owm = new OWM(teste);
+		
+		
+		CurrentWeather clima = owm.currentWeatherByCityName(cidadeSalva.getNm_Cidade());
+		System.out.println("depois de atribuir chave");
+		System.out.println(clima.getMainData().getTempKf());
+		System.out.println(clima.getMainData().getTempMax());
+		System.out.println(clima.getMainData().getTempMin());
+		
+		
+		return null;
+	}
+
+}

@@ -1,0 +1,105 @@
+package com.ddm.climatempo.api.resource;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ddm.climatempo.api.event.RecursoCriadoEvent;
+import com.ddm.climatempo.api.model.Funcionario;
+import com.ddm.climatempo.api.repository.FuncionarioRepository;
+import com.ddm.climatempo.api.repository.filter.FuncionarioFilter;
+import com.ddm.climatempo.api.repository.projection.ResumoFuncionario;
+import com.ddm.climatempo.api.service.FuncionarioService;
+
+@RestController //meta dados. converte json em objeto
+@RequestMapping ("/colaborador")
+public class FuncionarioResource {
+
+	@Autowired
+	private FuncionarioRepository funcionarioRepository;
+	
+	@Autowired
+	private FuncionarioService funcionarioService;
+	
+	@Autowired
+	private ApplicationEventPublisher publisher;
+	
+	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_CONSULTAR_FUNCIONARIO') and #oauth2.hasScope('read')")
+	public Page<Funcionario> pesquisar(FuncionarioFilter funcionarioFilter, Pageable pageable) {
+		return funcionarioRepository.filtrar(funcionarioFilter, pageable);
+		 //o preAuthorize pode estar antes ou depois do get/post/put...
+		//o preAuthorize é a autorização do usuário, o oauth2.hasScope é do client.
+	}
+	
+	//parametro para distinguir qual método getmapping usar, se é pesquisar ou resumir
+		@GetMapping(params = "resumo")
+		@PreAuthorize("hasAuthority('ROLE_CONSULTAR_FUNCIONARIO') and #oauth2.hasScope('read')")
+		public Page<ResumoFuncionario> resumir(FuncionarioFilter funcionarioFilter, Pageable pageable) {
+			return funcionarioRepository.resumir(funcionarioFilter, pageable);
+		}
+	
+	
+	
+	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_FUNCIONARIO') and #oauth2.hasScope('write')")
+	public ResponseEntity<Funcionario> criar(@Valid @RequestBody Funcionario funcionario, HttpServletResponse response) {
+		System.out.println("Teste");
+		Funcionario funcionarioSalvo = funcionarioRepository.save(funcionario); //alterar para salvar ao invés de save. Verificar AgendamentoResouce
+		//o this significa que na classe recursoCriadoEvent o "source" que recebe por parametro é passado no this, ou seja quem chama
+		publisher.publishEvent(new RecursoCriadoEvent(this, response, funcionarioSalvo.getCd_Funcionario()));
+		return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioSalvo);
+		//retornará o status 201 - created no html
+		
+	}
+	
+	@GetMapping("/{cd_Funcionario}")
+	@PreAuthorize("hasAuthority('ROLE_CONSULTAR_FUNCIONARIO') and #oauth2.hasScope('read')")
+	public ResponseEntity<Funcionario> buscarPeloCodigo (@PathVariable Long cd_Funcionario) {
+		Funcionario funcionario = funcionarioRepository.findOne(cd_Funcionario);
+		//return pessoaRepository.findOne(cd_Pessoa);
+		return funcionario != null ? ResponseEntity.ok(funcionario) : ResponseEntity.notFound().build();
+	}
+	
+	@DeleteMapping("/{cd_Funcionario}")
+	@ResponseStatus(HttpStatus.NO_CONTENT) //retornará codigo 204, significa que efetuou com sucesso porém nao existe retorno
+	public void remover(@PathVariable Long cd_Funcionario) {
+		funcionarioRepository.delete(cd_Funcionario);
+		
+	}
+	
+	@PutMapping("/{cd_Funcionario}")
+	@PreAuthorize("hasAuthority('ROLE_EDITAR_FUNCIONARIO') and #oauth2.hasScope('write')")
+	public ResponseEntity<Funcionario> atualizar(@PathVariable Long cd_Funcionario, @Valid @RequestBody Funcionario funcionario) {
+		Funcionario funcionarioSalvo = funcionarioService.atualizar(cd_Funcionario, funcionario);
+		return ResponseEntity.ok(funcionarioSalvo);
+		
+	}
+	
+	
+	@PutMapping("/{cd_Funcionario}/ativo")
+	@PreAuthorize("hasAuthority('ROLE_EDITAR_FUNCIONARIO') and #oauth2.hasScope('write')")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void atualizarAtivo(@PathVariable long cd_Funcionario, @RequestBody Boolean ativo) {
+		funcionarioService.atualizarAtivo(cd_Funcionario, ativo);
+		
+	}
+
+	
+}

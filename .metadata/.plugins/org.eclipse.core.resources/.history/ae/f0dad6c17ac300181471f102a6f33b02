@@ -1,0 +1,100 @@
+package com.ddm.climatempo.api.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
+
+//o configuraion implica que a classe é de configuração porém não tem necessidade 
+//pois a classe herdará do configurerAdapter
+@Configuration
+@EnableWebSecurity
+@EnableResourceServer
+@EnableGlobalMethodSecurity(prePostEnabled = true) //realizar segurança em cima dos métodos.
+public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+//public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
+
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
+	
+	@Autowired
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		//auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ROLE");
+		// nessa primeira etapa busca da memória e não do banco;
+		// é passado usuario, senha e a regra/permissão
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+
+	}
+	
+
+	//é public pq no res.serverconfig.adapter é puclico
+	@Override
+	public void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests()
+				.antMatchers("/marcas").permitAll()//a autorização conforme classe AuthorizationServer e anotações nas classes de Resouces, matam permitAll
+				.anyRequest().authenticated()
+				.and()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+			.csrf().disable();
+		//lancamentos qualquer um pode acessar e as demais
+		//bloqueia toda requisição caso não esteja autenticado (anyrequest). 
+		//será segurança basica (httpBasic)
+		//e não terá sessão no sistema, não mantem estado de bada.(staless)
+		//o csrf bloqueia javascript injection
+	}
+	
+	@Override
+		public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+			resources.stateless(true); //A PARTE DE SEGURANÇA NAO GUARDARA ESTADO.
+		}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	//para realizar a segurança dos métodos utilizando OAuth2
+	@Bean
+	public MethodSecurityExpressionHandler createExpressionHandler() {
+		return new OAuth2MethodSecurityExpressionHandler();
+	}
+	
+	
+//Para o autenticador basico
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ROLE");
+//		// nessa primeira etapa busca da memória e não do banco;
+//		// é passado usuario, senha e a regra/permissão
+//
+//	}
+//
+//	@Override
+//	protected void configure(HttpSecurity http) throws Exception {
+//		http.authorizeRequests()
+//				.antMatchers("/marcas").permitAll()
+//				.anyRequest().authenticated()
+//				.and()
+//			.httpBasic().and()
+//			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//			.csrf().disable();
+//		//lancamentos qualquer um pode acessar e as demais
+//		//bloqueia toda requisição caso não esteja autenticado (anyrequest). 
+//		//será segurança basica (httpBasic)
+//		//e não terá sessão no sistema, não mantem estado de bada.(staless)
+//		//o csrf bloqueia javascript injection
+//	}
+
+}

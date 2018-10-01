@@ -1,0 +1,17 @@
+package com.ddm.climatempo.api.model;
+
+import javax.annotation.Generated;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
+@StaticMetamodel(Marca.class)
+public abstract class Marca_ {
+
+	public static volatile SingularAttribute<Marca, Boolean> ativo;
+	public static volatile SingularAttribute<Marca, String> nm_Marca;
+	public static volatile SingularAttribute<Marca, Long> cd_Marca;
+	public static volatile SingularAttribute<Marca, String> ds_Marca;
+
+}
+

@@ -1,0 +1,57 @@
+package com.ddm.climatempo.api.repository.projection;
+
+public class ResumoFuncionario {
+	
+	private long cd_Funcionario;
+	private String nm_Funcionario;
+	private String email;
+	private boolean ativo;
+
+	
+	//é gerado o construtor pois quando for utilizar o criteria será ele utilizado para construir o resumo.
+		public ResumoFuncionario(long cd_Funcionario, String nm_Funcionario, String email, boolean ativo) {
+			super();
+			this.cd_Funcionario = cd_Funcionario;
+			this.nm_Funcionario = nm_Funcionario;
+			this.email = email;
+			this.ativo = ativo;
+		}
+	
+			
+		
+	public long getCd_Funcionario() {
+			return cd_Funcionario;
+		}
+
+
+	public void setCd_Funcionario(long cd_Funcionario) {
+		this.cd_Funcionario = cd_Funcionario;
+	}
+
+
+	public String getNm_Funcionario() {
+		return nm_Funcionario;
+	}
+
+	public void setNm_Funcionario(String nm_Funcionario) {
+		this.nm_Funcionario = nm_Funcionario;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
+	}
+
+}

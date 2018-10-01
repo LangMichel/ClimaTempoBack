@@ -1,0 +1,24 @@
+package com.ddm.climatempo.api.model;
+
+import java.time.LocalDate;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+public class Clima {
+	
+	private double tempDia;
+	
+	private double tempMax;
+	
+	private double tempMin;
+	
+	private String linkIcone;
+	
+	private LocalDate dataClima;
+
+	
+}

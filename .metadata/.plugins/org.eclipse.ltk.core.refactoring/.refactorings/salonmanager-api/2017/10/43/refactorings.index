@@ -1,0 +1,6 @@
+1508637170711	Encapsulate field 'pessoa'
+1508809654416	Rename type 'SecurityConfig'
+1509158484413	Encapsulate field 'tipo'
+1509161488415	Encapsulate field 'permissoes'
+1509164020332	Rename resource 'V04__criar_permissoes_e_regras.sql'
+1509164673634	Encapsulate field 'email'

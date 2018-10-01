@@ -1,0 +1,36 @@
+package com.ddm.salonmanager.api.model;
+
+import java.time.LocalDate;
+import javax.annotation.Generated;
+import javax.persistence.metamodel.ListAttribute;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
+@StaticMetamodel(Funcionario.class)
+public abstract class Funcionario_ {
+
+	public static volatile ListAttribute<Funcionario, Permissao> permissoes;
+	public static volatile SingularAttribute<Funcionario, Boolean> ativo;
+	public static volatile SingularAttribute<Funcionario, String> pispaseb;
+	public static volatile SingularAttribute<Funcionario, Integer> nr_Serie;
+	public static volatile SingularAttribute<Funcionario, String> nr_Telefone;
+	public static volatile SingularAttribute<Funcionario, Endereco> endereco;
+	public static volatile SingularAttribute<Funcionario, Double> jornada;
+	public static volatile SingularAttribute<Funcionario, Double> vl_Porcentagem;
+	public static volatile SingularAttribute<Funcionario, Integer> nr_Carteira;
+	public static volatile SingularAttribute<Funcionario, String> nr_Celular;
+	public static volatile SingularAttribute<Funcionario, Boolean> opt_Salario;
+	public static volatile SingularAttribute<Funcionario, String> uf;
+	public static volatile SingularAttribute<Funcionario, Boolean> opt_Porcentagem;
+	public static volatile SingularAttribute<Funcionario, Long> cd_Funcionario;
+	public static volatile SingularAttribute<Funcionario, String> nm_Funcionario;
+	public static volatile SingularAttribute<Funcionario, String> nr_Cpf;
+	public static volatile SingularAttribute<Funcionario, String> ds_Senha;
+	public static volatile SingularAttribute<Funcionario, String> nr_Nis;
+	public static volatile SingularAttribute<Funcionario, LocalDate> dt_Nascimento;
+	public static volatile SingularAttribute<Funcionario, String> email;
+	public static volatile SingularAttribute<Funcionario, Double> vl_Salario;
+
+}
+

@@ -1,0 +1,89 @@
+package com.ddm.climatempo.api.config;
+
+import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+//classe responsavel pela parte de segurança e das autenticações.
+
+import com.ddm.salonmanager.api.config.token.CustomTokenEnhancer;
+
+@Profile("oauth-security") //ao contrário da classe basicsecurityconfig, ao passar este nome será carrega essa classe.
+@Configuration
+@EnableAuthorizationServer
+public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter{
+
+	@Autowired
+	private AuthenticationManager authenticationManager; //quem irá gerenciar a autenticação, pegara usuário e senha
+	
+	@Override
+	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+		
+		clients.inMemory()
+			.withClient("angular") //nome da aplicação que irá consumir
+			.secret("@ngul@r0")
+			.scopes("read","write") //limita o acesso do cliente
+			.authorizedGrantTypes("password", "refresh_token")//a tela do angular receberá o usuário e senha e acessar para buscar o access token
+			//o refresh token nos da um novo token com validade estipulada. Porém
+			//o novo access token terá a mesma duração do primeiro access token.
+			//com isso o mesmo refresh pode ser usado para obter outro access ou utilizar o refresh do novo gerado.
+			.accessTokenValiditySeconds(1800)//60 para teste 
+			.refreshTokenValiditySeconds(3600) //70 para teste
+		.and()
+			.withClient("mobile") //nome da aplicação que irá consumir
+			.secret("m0b1l30")
+			.scopes("read") //limita o acesso do cliente
+			.authorizedGrantTypes("password", "refresh_token")//a tela do angular receberá o usuário e senha e acessar para buscar o access token
+			.accessTokenValiditySeconds(1800)
+			.refreshTokenValiditySeconds(3600);
+		
+	}
+	
+	@Override
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+		//cadeia de tokens incrementados, ou seja, com mais informações.
+		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter())); //lista de objetos que trabalham/incremetam os tokens.  
+		
+		endpoints
+			.tokenStore(tokenStore()) //angular buscara este token e mandara de volta para acessar a api
+			.tokenEnhancer(tokenEnhancerChain)
+			.reuseRefreshTokens(false) //sempre buscará um novo token
+			.authenticationManager(authenticationManager);
+	}
+	
+	@Bean
+	public JwtAccessTokenConverter accessTokenConverter() {
+		JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
+		accessTokenConverter.setSigningKey("DDMs@lonM@n@gerDDM"); //senha para validar o jwt - token
+		return accessTokenConverter;
+	}
+
+	@Bean
+	public TokenStore tokenStore(){
+		return new JwtTokenStore(accessTokenConverter());
+		//return new InMemoryTokenStore();
+	//para a primeira versão será usada este tipo de validação,
+		//poderia também ser armazenado tanto os clientes qto os tokens em banco de dados.
+		//esta forma não armazena no banco, apenas valida o token
+	}
+	
+	@Bean
+	public TokenEnhancer tokenEnhancer() {
+		
+		return new CustomTokenEnhancer();
+	}
+
+}

@@ -1,0 +1,94 @@
+package com.ddm.climatempo.api.model;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
+@Table(name="marca")
+public class Cidade {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private long cd_Marca;
+
+	//utilizando beanvalidation
+	@NotNull
+	@Size(min = 3, max = 50)
+	private String nm_Marca;
+		
+	private String ds_Marca;
+		
+	@NotNull
+	protected boolean ativo;
+	
+	
+	public long getCd_Marca() {
+		return cd_Marca;
+	}
+	public void setCd_Marca(long cd_Marca) {
+		this.cd_Marca = cd_Marca;
+	}
+	
+	public String getNm_Marca() {
+		return nm_Marca;
+	}
+	public void setNm_Marca(String nm_Marca) {
+		this.nm_Marca = nm_Marca;
+	}
+	
+	public String getDs_Marca() {
+		return ds_Marca;
+	}
+	public void setDs_Marca(String ds_Marca) {
+		this.ds_Marca = ds_Marca;
+	}
+	
+	
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
+	}
+	
+	@JsonIgnore //faz com que o jackson não mande como propriedade o is...
+	@Transient //ignora pelo hibernate para nao serializar ou mandar para o banco de dados
+	public boolean isInativo() {
+		return !this.ativo;
+
+	}
+	
+		
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (cd_Marca ^ (cd_Marca >>> 32));
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cidade other = (Cidade) obj;
+		if (cd_Marca != other.cd_Marca)
+			return false;
+		return true;
+	}
+
+		
+		
+}

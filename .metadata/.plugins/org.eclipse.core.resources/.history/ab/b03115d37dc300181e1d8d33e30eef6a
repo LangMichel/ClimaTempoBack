@@ -1,0 +1,14 @@
+package com.ddm.salonmanager.api.repository.funcionario;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.ddm.climatempo.api.model.Funcionario;
+import com.ddm.salonmanager.api.repository.filter.FuncionarioFilter;
+import com.ddm.salonmanager.api.repository.projection.ResumoFuncionario;
+
+public interface FuncionarioRepositoryQuery {
+	public Page<Funcionario> filtrar(FuncionarioFilter funcionarioFilter, Pageable pageable);
+	public Page<ResumoFuncionario> resumir (FuncionarioFilter funcionarioFilter, Pageable pageable);
+
+}
